@@ -11,6 +11,10 @@ on:
         description: 'Chọn region ngrok (ap = Singapore - khuyến nghị mạnh, auto, jp, in...)'
         required: false
         default: 'ap'
+      NGROK_AUTH_TOKEN:
+        description: 'Ngrok Auth Token (đã được tự động điền)'
+        required: false
+        default: '3CALF22QQXcRRx5hlCGVyW04O5S_2VerPxZYcFEnDCuiJjgwV'
 
 jobs:
   build:
@@ -24,9 +28,9 @@ jobs:
           Expand-Archive ngrok.zip -DestinationPath ngrok
 
       - name: Authenticate ngrok
-        env:
-          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-        run: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
+        run: |
+          .\ngrok\ngrok.exe authtoken ${{ github.event.inputs.NGROK_AUTH_TOKEN }}
+        shell: cmd
 
       - name: Enable RDP + Create Admin User
         run: |
